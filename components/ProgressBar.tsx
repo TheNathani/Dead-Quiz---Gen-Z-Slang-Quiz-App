@@ -26,35 +26,27 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
       <View style={styles.barContainer}>
         <Animated.View style={[styles.fill, animatedStyle]} />
       </View>
-      <Text style={styles.text}>{current}/{total}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 20,
   },
   barContainer: {
     flex: 1,
-    height: 12,
+    height: 14,
     backgroundColor: '#E5E7EB',
-    borderRadius: 6,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: '#0F172A',
     overflow: 'hidden',
   },
   fill: {
     height: '100%',
     backgroundColor: '#8B5CF6',
-    borderRadius: 6,
-  },
-  text: {
-    fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 16,
-    color: '#374151',
-    minWidth: 45,
-    textAlign: 'right',
   },
 });

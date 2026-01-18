@@ -76,3 +76,25 @@ export async function saveScore(
 export function generateDeviceId(): string {
   return 'device_' + Math.random().toString(36).substring(2, 15);
 }
+
+// Generate slang-heavy message for "Text my Kid" feature
+export function generateSlangMessage(score: number, total: number): string {
+  const percent = (score / total) * 100;
+
+  if (percent === 100) {
+    return `I just got 100% on the Dead Quiz. Your fit today is bussin, no cap. I'm lowkey the main character now. IJBOL at how cooked you thought I was. Periodt.`;
+  }
+  if (percent >= 90) {
+    return `Ayo I just scored ${score}/${total} on the Dead Quiz. That's giving main character energy fr fr. Your parent has rizz now, no cap. Stay locked in bestie.`;
+  }
+  if (percent >= 70) {
+    return `Just took the Dead Quiz and got ${score}/${total}. Lowkey slay tbh. I'm not cooked anymore. Bffr, I understood the assignment. W parent moment.`;
+  }
+  if (percent >= 50) {
+    return `OK so I got ${score}/${total} on the Dead Quiz. Mid performance but I'm learning the brainrot. Not an L, not a W. We move. IJBOL.`;
+  }
+  if (percent >= 30) {
+    return `Your parent just got ${score}/${total} on the Dead Quiz. I'm a little cooked ngl. But I'm locked in on learning this skibidi sigma Ohio brainrot. Bffr with me.`;
+  }
+  return `Help I just got ${score}/${total} on the Dead Quiz. I'm absolutely cooked. Certified unc behavior. That's a major L. Please teach me before I crash out. This is so Ohio.`;
+}
