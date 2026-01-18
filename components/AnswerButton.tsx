@@ -23,7 +23,10 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
   const shakeX = useSharedValue(0);
 
   const triggerHaptic = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch((error) => {
+      // Haptics may not be available on all devices/platforms - fail silently
+      console.warn('AnswerButton: Haptic feedback not available:', error);
+    });
   };
 
   const handlePressIn = () => {

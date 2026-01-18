@@ -22,7 +22,10 @@ export function Button({ title, onPress, variant = 'primary', style }: ButtonPro
   const scale = useSharedValue(1);
 
   const triggerHaptic = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch((error) => {
+      // Haptics may not be available on all devices/platforms - fail silently
+      console.warn('Button: Haptic feedback not available:', error);
+    });
   };
 
   const handlePressIn = () => {

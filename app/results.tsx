@@ -25,45 +25,107 @@ export default function ResultsScreen() {
   useEffect(() => {
     // Save score to database
     const saveScoreAsync = async () => {
-      const deviceId = generateDeviceId();
-      await saveScore(deviceId, score, tier);
+      try {
+        const deviceId = generateDeviceId();
+        const result = await saveScore(deviceId, score, tier);
+        if (!result.success) {
+          console.warn('Failed to save score:', result.error);
+        }
+      } catch (error) {
+        console.error('Unexpected error saving score:', error);
+      }
     };
     saveScoreAsync();
 
-    // Celebration haptic
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    // Celebration haptic with error handling
+    const triggerHaptic = async () => {
+      try {
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (error) {
+        // Haptics may not be available on all devices/platforms
+        console.warn('Haptic feedback not available:', error);
+      }
+    };
+    triggerHaptic();
   }, [score, tier]);
 
   const handleShare = async () => {
     try {
       setIsSaving(true);
 
-      if (viewShotRef.current?.capture) {
-        const uri = await viewShotRef.current.capture();
+      if (!viewShotRef.current?.capture) {
+        console.error('handleShare: ViewShot ref is not available');
+        Alert.alert('Share Error', 'Unable to capture your results. Please try again.');
+        return;
+      }
 
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri, {
-            mimeType: 'image/png',
-            dialogTitle: 'Share your Dead Quiz results!',
-          });
-        } else {
-          Alert.alert('Sharing not available', 'Sharing is not available on this device.');
+      let uri: string;
+      try {
+        uri = await viewShotRef.current.capture();
+      } catch (captureError) {
+        console.error('handleShare: Failed to capture screenshot:', captureError);
+        Alert.alert('Capture Error', 'Failed to capture your results image. Please try again.');
+        return;
+      }
+
+      if (!uri) {
+        console.error('handleShare: Capture returned empty URI');
+        Alert.alert('Capture Error', 'Failed to generate results image. Please try again.');
+        return;
+      }
+
+      let isSharingAvailable: boolean;
+      try {
+        isSharingAvailable = await Sharing.isAvailableAsync();
+      } catch (availabilityError) {
+        console.error('handleShare: Failed to check sharing availability:', availabilityError);
+        Alert.alert('Share Error', 'Unable to determine if sharing is available on this device.');
+        return;
+      }
+
+      if (!isSharingAvailable) {
+        Alert.alert('Sharing not available', 'Sharing is not available on this device.');
+        return;
+      }
+
+      try {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'image/png',
+          dialogTitle: 'Share your Dead Quiz results!',
+        });
+      } catch (shareError) {
+        // User cancellation is not an error
+        if (shareError instanceof Error && shareError.message.includes('cancel')) {
+          console.log('handleShare: User cancelled sharing');
+          return;
         }
+        console.error('handleShare: Failed to share:', shareError);
+        Alert.alert('Share Error', 'Failed to share your results. Please try again.');
       }
     } catch (error) {
-      console.error('Error sharing:', error);
-      Alert.alert('Error', 'Failed to share your results. Please try again.');
+      console.error('handleShare: Unexpected error:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
     } finally {
       setIsSaving(false);
     }
   };
 
   const handlePlayAgain = () => {
-    router.replace('/quiz');
+    try {
+      router.replace('/quiz');
+    } catch (error) {
+      console.error('handlePlayAgain: Navigation error:', error);
+      Alert.alert('Navigation Error', 'Failed to start a new quiz. Please restart the app.');
+    }
   };
 
   const handleGoHome = () => {
-    router.replace('/');
+    try {
+      router.replace('/');
+    } catch (error) {
+      console.error('handleGoHome: Navigation error:', error);
+      Alert.alert('Navigation Error', 'Failed to return home. Please restart the app.');
+    }
   };
 
   return (

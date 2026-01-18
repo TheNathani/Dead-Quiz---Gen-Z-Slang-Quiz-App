@@ -1,22 +1,96 @@
 import { supabase, Question } from './supabase';
 
-export async function getRandomQuestions(count: number = 10): Promise<Question[]> {
-  const { data, error } = await supabase
-    .from('questions')
-    .select('*, words(*)')
-    .limit(count * 2); // Fetch more to allow for randomization
+export class QuestionFetchError extends Error {
+  constructor(
+    message: string,
+    public readonly code?: string,
+    public readonly details?: string
+  ) {
+    super(message);
+    this.name = 'QuestionFetchError';
+  }
+}
 
-  if (error) {
-    console.error('Error fetching questions:', error);
-    return [];
+export async function getRandomQuestions(count: number = 10): Promise<Question[]> {
+  if (count <= 0) {
+    throw new QuestionFetchError(
+      'Invalid question count: count must be a positive number',
+      'INVALID_COUNT'
+    );
   }
 
-  // Shuffle and return the requested count
-  const shuffled = (data || []).sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  try {
+    const { data, error } = await supabase
+      .from('questions')
+      .select('*, words(*)')
+      .limit(count * 2); // Fetch more to allow for randomization
+
+    if (error) {
+      throw new QuestionFetchError(
+        `Failed to fetch questions from database: ${error.message}`,
+        error.code,
+        error.details
+      );
+    }
+
+    if (!data || data.length === 0) {
+      throw new QuestionFetchError(
+        'No questions available in the database',
+        'NO_DATA'
+      );
+    }
+
+    // Validate question data structure
+    const validQuestions = data.filter((q): q is Question => {
+      return (
+        q &&
+        typeof q.id === 'number' &&
+        typeof q.question_text === 'string' &&
+        typeof q.correct_answer === 'string' &&
+        Array.isArray(q.wrong_answers) &&
+        q.wrong_answers.length > 0
+      );
+    });
+
+    if (validQuestions.length === 0) {
+      throw new QuestionFetchError(
+        'Questions fetched but data format is invalid',
+        'INVALID_FORMAT'
+      );
+    }
+
+    // Shuffle and return the requested count
+    const shuffled = validQuestions.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+  } catch (error) {
+    if (error instanceof QuestionFetchError) {
+      throw error;
+    }
+    // Handle network or unexpected errors
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new QuestionFetchError(
+      `Network error while fetching questions: ${message}`,
+      'NETWORK_ERROR'
+    );
+  }
 }
 
 export function shuffleAnswers(question: Question): string[] {
+  if (!question) {
+    console.error('shuffleAnswers: question is null or undefined');
+    return [];
+  }
+
+  if (!question.correct_answer) {
+    console.error('shuffleAnswers: question is missing correct_answer');
+    return [];
+  }
+
+  if (!Array.isArray(question.wrong_answers) || question.wrong_answers.length === 0) {
+    console.error('shuffleAnswers: question is missing or has invalid wrong_answers');
+    return [question.correct_answer];
+  }
+
   const allAnswers = [question.correct_answer, ...question.wrong_answers];
   return allAnswers.sort(() => Math.random() - 0.5);
 }

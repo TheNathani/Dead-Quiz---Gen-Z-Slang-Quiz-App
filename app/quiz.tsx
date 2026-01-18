@@ -17,7 +17,7 @@ import {
   Confetti,
 } from '../components';
 import { Question } from '../lib/supabase';
-import { getRandomQuestions, shuffleAnswers, fallbackQuestions } from '../lib/questions';
+import { getRandomQuestions, shuffleAnswers, fallbackQuestions, QuestionFetchError } from '../lib/questions';
 
 const { width } = Dimensions.get('window');
 
@@ -51,12 +51,26 @@ export default function QuizScreen() {
         setQuestions(fetchedQuestions);
         setupQuestion(fetchedQuestions[0]);
       } else {
-        // Use fallback questions
+        // Use fallback questions - should not happen with new error handling
+        console.warn('loadQuestions: Received empty questions array, using fallback');
         setQuestions(fallbackQuestions);
         setupQuestion(fallbackQuestions[0]);
       }
     } catch (error) {
-      console.error('Error loading questions:', error);
+      // Handle specific error types
+      if (error instanceof QuestionFetchError) {
+        console.error(`loadQuestions: ${error.code} - ${error.message}`);
+        if (error.code === 'NETWORK_ERROR') {
+          console.warn('loadQuestions: Network error, using offline fallback questions');
+        } else if (error.code === 'NO_DATA') {
+          console.warn('loadQuestions: No questions in database, using fallback questions');
+        } else if (error.code === 'INVALID_FORMAT') {
+          console.warn('loadQuestions: Invalid question format from server, using fallback questions');
+        }
+      } else {
+        console.error('loadQuestions: Unexpected error:', error);
+      }
+      // Use fallback questions for any error
       setQuestions(fallbackQuestions);
       setupQuestion(fallbackQuestions[0]);
     }
@@ -64,8 +78,21 @@ export default function QuizScreen() {
   };
 
   const setupQuestion = (question: Question) => {
+    if (!question) {
+      console.error('setupQuestion: Received null/undefined question');
+      return;
+    }
+
     const shuffled = shuffleAnswers(question);
-    setAnswers(shuffled.map((text) => ({ text, state: 'default' })));
+
+    if (!shuffled || shuffled.length === 0) {
+      console.error('setupQuestion: shuffleAnswers returned empty array for question:', question.id);
+      // Create minimal answer set as fallback
+      setAnswers([{ text: question.correct_answer || 'Error loading answers', state: 'default' }]);
+    } else {
+      setAnswers(shuffled.map((text) => ({ text, state: 'default' })));
+    }
+
     setAnswered(false);
     setIsCorrect(false);
     setShowConfetti(false);
@@ -98,26 +125,36 @@ export default function QuizScreen() {
       if (correct) {
         setScore((prev) => prev + 1);
         setShowConfetti(true);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        // Haptic feedback with error handling
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch((error) => {
+          console.warn('handleAnswer: Haptic feedback (success) not available:', error);
+        });
       } else {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        // Haptic feedback with error handling
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch((error) => {
+          console.warn('handleAnswer: Haptic feedback (error) not available:', error);
+        });
       }
 
       // Auto-advance after delay
       setTimeout(() => {
-        if (currentIndex < questions.length - 1) {
-          const nextIndex = currentIndex + 1;
-          setCurrentIndex(nextIndex);
-          setupQuestion(questions[nextIndex]);
-        } else {
-          // Quiz complete - navigate to results
-          router.replace({
-            pathname: '/results',
-            params: {
-              score: (correct ? score + 1 : score).toString(),
-              total: questions.length.toString(),
-            },
-          });
+        try {
+          if (currentIndex < questions.length - 1) {
+            const nextIndex = currentIndex + 1;
+            setCurrentIndex(nextIndex);
+            setupQuestion(questions[nextIndex]);
+          } else {
+            // Quiz complete - navigate to results
+            router.replace({
+              pathname: '/results',
+              params: {
+                score: (correct ? score + 1 : score).toString(),
+                total: questions.length.toString(),
+              },
+            });
+          }
+        } catch (error) {
+          console.error('handleAnswer: Navigation error:', error);
         }
       }, 1500);
     },

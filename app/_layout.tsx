@@ -12,11 +12,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
 import 'react-native-reanimated';
 
-// Prevent the splash screen from auto-hiding
-SplashScreen.preventAutoHideAsync();
+// Prevent the splash screen from auto-hiding with error handling
+SplashScreen.preventAutoHideAsync().catch((error) => {
+  console.warn('SplashScreen.preventAutoHideAsync error:', error);
+});
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -24,12 +26,26 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
+    if (fontError) {
+      console.error('Font loading error:', fontError);
     }
-  }, [fontsLoaded]);
+  }, [fontError]);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    const hideSplash = async () => {
+      if (fontsLoaded || fontError) {
+        try {
+          await SplashScreen.hideAsync();
+        } catch (error) {
+          console.warn('SplashScreen.hideAsync error:', error);
+        }
+      }
+    };
+    hideSplash();
+  }, [fontsLoaded, fontError]);
+
+  // Show loading state if fonts haven't loaded and there's no error
+  if (!fontsLoaded && !fontError) {
     return <View style={{ flex: 1, backgroundColor: '#FAF9F6' }} />;
   }
 
