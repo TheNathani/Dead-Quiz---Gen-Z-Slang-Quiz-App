@@ -151,18 +151,18 @@ function getTier(score, total) {
 function generateTextMessage(score, total) {
   const percent = (score / total) * 100;
   if (percent >= 90) {
-    return `yo I just got ${score}/${total} on the Dead Quiz 💀 I literally have more rizz than you now. Your fit today better be bussin or I'm collecting a Fanum tax on your snacks. no cap fr fr`;
+    return `Just scored ${score}/${total} on a Gen Z slang quiz 👑 Turns out I actually know what you're saying. Watch yourself.`;
   }
   if (percent >= 70) {
-    return `just took the Dead Quiz and got ${score}/${total} 😎 lowkey slayed it. might start saying 'skibidi' unironically now. you've been warned bestie`;
+    return `Got ${score}/${total} on a Gen Z slang quiz 😎 Not bad right? I'm learning your language.`;
   }
   if (percent >= 50) {
-    return `ok so I got ${score}/${total} on the Dead Quiz... I'm not cooked but I'm definitely on medium heat 🍳 bffr tho some of these words are unhinged`;
+    return `Scored ${score}/${total} on a Gen Z slang quiz. I'm getting there! Had no idea what half these words meant 😅`;
   }
   if (percent >= 30) {
-    return `I got ${score}/${total} on the Dead Quiz 😬 apparently I'm giving "unc energy" whatever that means. explain yourself immediately`;
+    return `I got ${score}/${total} on a Gen Z slang quiz 😬 Clearly I need help. What does "mewing" even mean??`;
   }
-  return `HELP I got ${score}/${total} on the Dead Quiz 💀💀💀 I am fully cooked. I thought "mewing" was about cats?? we need to talk`;
+  return `Just bombed a Gen Z slang quiz - ${score}/${total} 💀 I understood nothing. We need to talk.`;
 }
 
 // ============ ADMOB PLACEHOLDER COMPONENTS ============
@@ -888,27 +888,10 @@ function HomeScreen({ onStartQuiz }) {
               <Text style={homeStyles.deadText}>DEAD</Text>
             </View>
             <Text style={homeStyles.title}>Gen Z Slang Quiz</Text>
-            <Text style={homeStyles.subtitle}>Are you cooked? Or main character? Find out, Unc.</Text>
+            <Text style={homeStyles.subtitle}>Test your knowledge of what your kids are actually saying.</Text>
           </Animated.View>
 
-          <Animated.View entering={FadeInUp.delay(400).duration(500)} style={homeStyles.statsContainer}>
-            <View style={homeStyles.statBox}>
-              <Text style={homeStyles.statNumber}>50</Text>
-              <Text style={homeStyles.statLabel}>Questions</Text>
-            </View>
-            <View style={homeStyles.statDivider} />
-            <View style={homeStyles.statBox}>
-              <Text style={homeStyles.statNumber}>10</Text>
-              <Text style={homeStyles.statLabel}>Per Quiz</Text>
-            </View>
-            <View style={homeStyles.statDivider} />
-            <View style={homeStyles.statBox}>
-              <Text style={homeStyles.statNumber}>2026</Text>
-              <Text style={homeStyles.statLabel}>Slang</Text>
-            </View>
-          </Animated.View>
-
-          <Animated.View entering={FadeInUp.delay(600).duration(500)} style={homeStyles.buttonContainer}>
+          <Animated.View entering={FadeInUp.delay(400).duration(500)} style={homeStyles.buttonContainer}>
             <Button title="Start Quiz" onPress={onStartQuiz} size="large" />
           </Animated.View>
 
@@ -968,39 +951,6 @@ const homeStyles = StyleSheet.create({
     color: COLORS.gray,
     textAlign: 'center',
     paddingHorizontal: 20,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: COLORS.black,
-    padding: 20,
-    marginBottom: 32,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
-  },
-  statBox: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  statNumber: {
-    fontFamily: 'PlusJakartaSans_800ExtraBold',
-    fontSize: 24,
-    color: COLORS.primary,
-  },
-  statLabel: {
-    fontFamily: 'PlusJakartaSans_500Medium',
-    fontSize: 12,
-    color: COLORS.gray,
-    marginTop: 2,
-  },
-  statDivider: {
-    width: 2,
-    backgroundColor: COLORS.lightGray,
   },
   buttonContainer: {
     marginBottom: 24,
@@ -1328,7 +1278,7 @@ function ResultsScreen({ score, total, onPlayAgain, onGoHome }) {
             </Animated.Text>
 
             <Animated.View entering={FadeInUp.delay(1000).duration(500)} style={resultsStyles.buttonsContainer}>
-              <Button title="Text My Kid" onPress={handleTextKid} variant="secondary" size="medium" style={resultsStyles.textButton} />
+              <Button title="Share Results" onPress={handleTextKid} variant="secondary" size="medium" style={resultsStyles.textButton} />
               <Button title="Play Again" onPress={onPlayAgain} size="medium" />
               <Button title="Home" onPress={onGoHome} variant="ghost" />
             </Animated.View>
