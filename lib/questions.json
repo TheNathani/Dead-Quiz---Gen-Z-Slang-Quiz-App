@@ -1,0 +1,452 @@
+[
+  {
+    "id": 1,
+    "word": "Aura",
+    "question": "If you trip in public and people say you 'lost 1,000 aura,' what happened?",
+    "correct": "You lost your 'cool' factor",
+    "wrong": ["You lost your wallet", "You are glowing", "You need a doctor"],
+    "parent_tip": "Aura is like an invisible scoreboard. Doing cool things adds points; being embarrassing takes them away.",
+    "cringe_level": 4
+  },
+  {
+    "id": 2,
+    "word": "Locked in",
+    "question": "What does a teen mean when they say they are 'locked in'?",
+    "correct": "Completely focused and determined",
+    "wrong": ["They are stuck in a room", "They lost their keys", "They are going to sleep"],
+    "parent_tip": "The ultimate state of focus. If your kid is 'locked in' on a task, don't interrupt them.",
+    "cringe_level": 2
+  },
+  {
+    "id": 3,
+    "word": "Glazing",
+    "question": "If your kid tells you to 'stop glazing the teacher,' what are you doing?",
+    "correct": "Over-complimenting or 'sucking up'",
+    "wrong": ["Making donuts", "Cleaning the windows", "Helping with chores"],
+    "parent_tip": "Modern version of being a 'brown-noser.' It's considered very cringe to glaze someone too hard.",
+    "cringe_level": 6
+  },
+  {
+    "id": 4,
+    "word": "Crash out",
+    "question": "What is someone doing if they 'crash out' over a bad grade?",
+    "correct": "Having a total meltdown or overreacting",
+    "wrong": ["Going to sleep", "Leaving the room quietly", "Studying harder"],
+    "parent_tip": "Used for extreme reactions. 'He really crashed out' means he lost his cool completely.",
+    "cringe_level": 5
+  },
+  {
+    "id": 5,
+    "word": "IJBOL",
+    "question": "If someone texts you 'IJBOL,' what are they doing?",
+    "correct": "Laughing out loud suddenly",
+    "wrong": ["Asking for help", "Saying goodbye", "Complaining about food"],
+    "parent_tip": "Stands for 'I Just Burst Out Laughing.' It's the 2026 upgrade to 'LOL.'",
+    "cringe_level": 3
+  },
+  {
+    "id": 6,
+    "word": "Bffr",
+    "question": "What is someone asking when they say 'Bffr'?",
+    "correct": "Be for real / Stop lying",
+    "wrong": ["Best friends forever", "Buy food for real", "Be friends first"],
+    "parent_tip": "Use this when your kid tells you a story that sounds 100% fake.",
+    "cringe_level": 4
+  },
+  {
+    "id": 7,
+    "word": "Unc",
+    "question": "If a teen calls you 'Unc,' what are they implying?",
+    "correct": "You are old or out of touch",
+    "wrong": ["You are their favorite uncle", "You are very rich", "You are a professional athlete"],
+    "parent_tip": "Short for 'Uncle.' It's a playful (but sharp) jab at your age. 'It's time for bed, Unc.'",
+    "cringe_level": 7
+  },
+  {
+    "id": 8,
+    "word": "AI Slop",
+    "question": "What does Gen Z call low-quality, fake-looking AI videos?",
+    "correct": "AI Slop",
+    "wrong": ["Cyber Junk", "Robot Trash", "Digital Dust"],
+    "parent_tip": "They have a high 'BS' meter for AI. If a video looks lazy or generated, it's 'slop.'",
+    "cringe_level": 2
+  },
+  {
+    "id": 9,
+    "word": "Mewing",
+    "question": "Why would a teen put a finger to their lips and point to their jaw?",
+    "correct": "They are doing a jawline exercise",
+    "wrong": ["They have a toothache", "They are telling you to be quiet", "They are hungry"],
+    "parent_tip": "If they do this, they can't talk because it 'breaks their streak.' It's a viral jawline meme.",
+    "cringe_level": 8
+  },
+  {
+    "id": 10,
+    "word": "Brainrot",
+    "question": "What is 'Brainrot' content?",
+    "correct": "Mindless, low-quality internet memes",
+    "wrong": ["Educational videos", "Classic literature", "Medical news"],
+    "parent_tip": "The fast-paced, nonsensical videos that make you feel like your brain is melting.",
+    "cringe_level": 3
+  },
+  {
+    "id": 11,
+    "word": "Fanum Tax",
+    "question": "What is a 'Fanum Tax'?",
+    "correct": "Stealing a bite of a friend's food",
+    "wrong": ["A new app fee", "A TikTok dance", "A government tax"],
+    "parent_tip": "If your kid takes one of your fries, they just 'taxed' you.",
+    "cringe_level": 9
+  },
+  {
+    "id": 12,
+    "word": "Gyatt",
+    "question": "What is 'Gyatt' usually an exclamation for?",
+    "correct": "Shock or admiration of someone's physique",
+    "wrong": ["A type of hat", "A bad grade", "A healthy vegetable"],
+    "parent_tip": "Short for 'God Damn.' Usually shouted when someone with a certain 'physique' walks by.",
+    "cringe_level": 9
+  },
+  {
+    "id": 13,
+    "word": "Sigma",
+    "question": "What does it mean to be a 'Sigma'?",
+    "correct": "An independent, 'lone wolf' leader",
+    "wrong": ["A math symbol", "A Greek food", "Someone who is lazy"],
+    "parent_tip": "Usually a compliment for someone who is cool and doesn't follow the crowd.",
+    "cringe_level": 7
+  },
+  {
+    "id": 14,
+    "word": "Skibidi",
+    "question": "How is the word 'Skibidi' most commonly used in 2026?",
+    "correct": "As a nonsense word for anything weird or bad",
+    "wrong": ["To mean 'expensive'", "To describe a fast car", "As a greeting"],
+    "parent_tip": "The ultimate 'brainrot' word. It doesn't really mean anything specific anymore.",
+    "cringe_level": 10
+  },
+  {
+    "id": 15,
+    "word": "Rizz",
+    "question": "What does it mean if someone has 'Rizz'?",
+    "correct": "They have charisma or charm",
+    "wrong": ["They are good at cooking", "They are tired", "They have a cold"],
+    "parent_tip": "Short for 'charisma.' If you have rizz, you're a smooth talker.",
+    "cringe_level": 8
+  },
+  {
+    "id": 16,
+    "word": "Cooked",
+    "question": "If someone says 'We're cooked,' they mean:",
+    "correct": "They are in big trouble or done for",
+    "wrong": ["The food is ready", "They are feeling hot", "They are excited"],
+    "parent_tip": "The 2026 version of saying 'We're toast.'",
+    "cringe_level": 2
+  },
+  {
+    "id": 17,
+    "word": "Ohio",
+    "question": "If someone says a situation is 'Only in Ohio,' what do they mean?",
+    "correct": "It is weird, chaotic, or bizarre",
+    "wrong": ["It is very peaceful", "It is in the Midwest", "It is very cold"],
+    "parent_tip": "Ohio is the internet's 'weird' state. Anything bizarre is 'so Ohio.'",
+    "cringe_level": 9
+  },
+  {
+    "id": 18,
+    "word": "6-7",
+    "question": "What does it mean if a kid shouts '6-7' while dancing?",
+    "correct": "Nothing; it's a nonsensical exclamation",
+    "wrong": ["They are talking about their height", "It's a math answer", "They are leaving at 6:07"],
+    "parent_tip": "Dictionary.com's 2025 Word of the Year. It literally means nothing. It's just a vibe.",
+    "cringe_level": 10
+  },
+  {
+    "id": 19,
+    "word": "Chicken Jockey",
+    "question": "What is a 'Chicken Jockey' in 2026 pop culture?",
+    "correct": "A meme from the Minecraft movie",
+    "wrong": ["A chef", "A horse rider", "A type of gamer"],
+    "parent_tip": "A viral meme from the Minecraft movie. It's often shouted for no reason.",
+    "cringe_level": 9
+  },
+  {
+    "id": 20,
+    "word": "Aura farming",
+    "question": "What is 'Aura farming'?",
+    "correct": "Trying too hard to look cool for points",
+    "wrong": ["Growing plants", "Playing video games", "Studying for a test"],
+    "parent_tip": "When someone is being a 'poser' just to get people to think they are cool.",
+    "cringe_level": 6
+  },
+  {
+    "id": 21,
+    "word": "Looksmaxxing",
+    "question": "If a teen is 'Looksmaxxing,' they are:",
+    "correct": "Trying to maximize their physical attractiveness",
+    "wrong": ["Looking for a job", "Watching too many movies", "Painting their room"],
+    "parent_tip": "The process of self-improvement (gym, skin care, style) to look their best.",
+    "cringe_level": 5
+  },
+  {
+    "id": 22,
+    "word": "Mogging",
+    "question": "If your kid says they are 'mogging' someone, they are:",
+    "correct": "Looking better or more dominant than them",
+    "wrong": ["Sharing snacks", "Cleaning the floor", "Taking a nap"],
+    "parent_tip": "A physical competition of who looks 'more alpha' or stylish.",
+    "cringe_level": 5
+  },
+  {
+    "id": 23,
+    "word": "Beige flag",
+    "question": "What is a 'Beige flag' in dating?",
+    "correct": "A trait that is just weird or boring",
+    "wrong": ["A dangerous trait", "A great trait", "A flag from a small country"],
+    "parent_tip": "Not a dealbreaker (Red) and not a win (Green). Just... odd. Like 'he eats pizza with a fork.'",
+    "cringe_level": 3
+  },
+  {
+    "id": 24,
+    "word": "Girl math",
+    "question": "What is 'Girl math'?",
+    "correct": "Using playful logic to justify spending",
+    "wrong": ["Hard calculus", "Math done by girls", "Saving money"],
+    "parent_tip": "Example: 'If I pay in cash, it's free because the money is already gone.'",
+    "cringe_level": 4
+  },
+  {
+    "id": 25,
+    "word": "Soft launch",
+    "question": "What is a 'Soft launch' on social media?",
+    "correct": "Subtly hinting at a new relationship",
+    "wrong": ["Launching a rocket", "Quitting a job", "Posting a selfie"],
+    "parent_tip": "Posting a photo of a new partner's elbow or hand before showing their face.",
+    "cringe_level": 2
+  },
+  {
+    "id": 26,
+    "word": "Algorithm fatigue",
+    "question": "If someone has 'Algorithm fatigue,' they are:",
+    "correct": "Bored with their social media feed",
+    "wrong": ["Tired from math class", "Broken their phone", "Sleepy"],
+    "parent_tip": "When you've scrolled so much that nothing on your 'For You' page is interesting anymore.",
+    "cringe_level": 2
+  },
+  {
+    "id": 27,
+    "word": "Out of pocket",
+    "question": "If a comment is 'Out of pocket,' it is:",
+    "correct": "Wild, inappropriate, or uncalled for",
+    "wrong": ["Very cheap", "Missing", "In a pocket"],
+    "parent_tip": "Used when someone says something way too blunt or rude.",
+    "cringe_level": 3
+  },
+  {
+    "id": 28,
+    "word": "Fit Check",
+    "question": "What is a 'Fit Check'?",
+    "correct": "Showing off or rating an outfit",
+    "wrong": ["Checking gym health", "Checking if a key fits", "A medical exam"],
+    "parent_tip": "Short for 'Outfit Check.' Usually a video of someone showing what they are wearing.",
+    "cringe_level": 4
+  },
+  {
+    "id": 29,
+    "word": "It's giving...",
+    "question": "The phrase 'It's giving...' is used to:",
+    "correct": "Describe the vibe or impression of something",
+    "wrong": ["Donate to charity", "Hand over a gift", "Ask for money"],
+    "parent_tip": "Example: 'It's giving main character' means you're acting like the star.",
+    "cringe_level": 6
+  },
+  {
+    "id": 30,
+    "word": "Tea",
+    "question": "If someone says 'Spill the tea,' they want to:",
+    "correct": "Share some juicy gossip",
+    "wrong": ["Make a drink", "Clean the floor", "Go to a cafe"],
+    "parent_tip": "Tea = Gossip. 'What's the tea?' is a great way to get them talking.",
+    "cringe_level": 5
+  },
+  {
+    "id": 31,
+    "word": "Sus",
+    "question": "If a person is acting 'Sus,' they are being:",
+    "correct": "Suspicious or shady",
+    "wrong": ["Successful", "Super", "Sustainable"],
+    "parent_tip": "Short for 'suspicious.' A classic that isn't going away.",
+    "cringe_level": 4
+  },
+  {
+    "id": 32,
+    "word": "Slay",
+    "question": "What does it mean to 'Slay'?",
+    "correct": "To do something exceptionally well",
+    "wrong": ["To be lazy", "To sleep all day", "To be mean"],
+    "parent_tip": "Used for anything impressive. 'You slayed that presentation.'",
+    "cringe_level": 7
+  },
+  {
+    "id": 33,
+    "word": "Periodt",
+    "question": "Adding 'Periodt' to a sentence means:",
+    "correct": "The discussion is final",
+    "wrong": ["I'm joking", "I'm confused", "Wait for me"],
+    "parent_tip": "An intense version of 'Period.' Usually involves a hand clap.",
+    "cringe_level": 8
+  },
+  {
+    "id": 34,
+    "word": "Simp",
+    "question": "What is a 'Simp'?",
+    "correct": "Someone who does too much for their crush",
+    "wrong": ["A simple person", "A genius", "A gamer"],
+    "parent_tip": "An insult for someone who is being overly desperate for attention from a crush.",
+    "cringe_level": 7
+  },
+  {
+    "id": 35,
+    "word": "Vibe check",
+    "question": "A 'Vibe check' is:",
+    "correct": "Assessing the mood or energy",
+    "wrong": ["A medical test", "A bank check", "A sound test"],
+    "parent_tip": "If you walk into a room and it feels awkward, the vibe check failed.",
+    "cringe_level": 5
+  },
+  {
+    "id": 36,
+    "word": "Finna",
+    "question": "What does 'Finna' mean?",
+    "correct": "Fixing to / Going to",
+    "wrong": ["Finally", "Finding", "Finish"],
+    "parent_tip": "Example: 'I'm finna go to the store.'",
+    "cringe_level": 3
+  },
+  {
+    "id": 37,
+    "word": "G.O.A.T.",
+    "question": "What does G.O.A.T. stand for?",
+    "correct": "Greatest Of All Time",
+    "wrong": ["Go Out And Travel", "Get On A Train", "Green Oats And Toast"],
+    "parent_tip": "The ultimate compliment for an athlete or musician.",
+    "cringe_level": 2
+  },
+  {
+    "id": 38,
+    "word": "Ick",
+    "question": "Getting 'The Ick' means:",
+    "correct": "A sudden disgust for someone you liked",
+    "wrong": ["Catching a cold", "Being happy", "Finding a bug"],
+    "parent_tip": "Once you get the 'ick,' there is usually no turning back in a relationship.",
+    "cringe_level": 5
+  },
+  {
+    "id": 39,
+    "word": "L",
+    "question": "What does it mean to 'Take an L'?",
+    "correct": "To suffer a loss or failure",
+    "wrong": ["To take a lunch", "To be lucky", "To learn something"],
+    "parent_tip": "L = Loss. 'That's a major L' means that was a huge failure.",
+    "cringe_level": 2
+  },
+  {
+    "id": 40,
+    "word": "W",
+    "question": "What does 'Taking a W' mean?",
+    "correct": "Winning or having a success",
+    "wrong": ["Walking", "Working", "Waiting"],
+    "parent_tip": "W = Win. Also known as 'Taking the dub.'",
+    "cringe_level": 2
+  },
+  {
+    "id": 41,
+    "word": "Menty B",
+    "question": "What is a 'Menty B'?",
+    "correct": "A mental breakdown",
+    "wrong": ["A type of candy", "A Monday morning", "A mountain bike"],
+    "parent_tip": "Used jokingly for being stressed. 'I'm having a total menty b.'",
+    "cringe_level": 7
+  },
+  {
+    "id": 42,
+    "word": "Rent free",
+    "question": "If something is living 'Rent free' in your head:",
+    "correct": "You can't stop thinking about it",
+    "wrong": ["You forgot it", "You are being paid", "It's a secret"],
+    "parent_tip": "Usually used for an annoying song or an embarrassing memory.",
+    "cringe_level": 3
+  },
+  {
+    "id": 43,
+    "word": "Sending me",
+    "question": "If a video is 'Sending me,' it is:",
+    "correct": "Making you laugh uncontrollably",
+    "wrong": ["Making you angry", "Very boring", "Being mailed"],
+    "parent_tip": "Short for 'sending me to heaven' because I'm dying of laughter.",
+    "cringe_level": 6
+  },
+  {
+    "id": 44,
+    "word": "Shook",
+    "question": "If you are 'Shook,' you are:",
+    "correct": "Shocked or surprised",
+    "wrong": ["Cold", "Exercising", "Asleep"],
+    "parent_tip": "Usually used for something surprising. 'I am shook by that news.'",
+    "cringe_level": 4
+  },
+  {
+    "id": 45,
+    "word": "Snatched",
+    "question": "If an outfit is 'Snatched,' it looks:",
+    "correct": "Perfect and well-fitted",
+    "wrong": ["Broken", "Stolen", "Hidden"],
+    "parent_tip": "A high compliment for style. 'Your waist is snatched.'",
+    "cringe_level": 7
+  },
+  {
+    "id": 46,
+    "word": "Valid",
+    "question": "If an opinion is 'Valid,' it is:",
+    "correct": "Relatable or understandable",
+    "wrong": ["A lie", "Too expensive", "Illegal"],
+    "parent_tip": "Used to show agreement. 'That's a valid point.'",
+    "cringe_level": 2
+  },
+  {
+    "id": 47,
+    "word": "We outside",
+    "question": "Saying 'We outside' means:",
+    "correct": "We are out having fun / living life",
+    "wrong": ["The door is locked", "It is raining", "We are lost"],
+    "parent_tip": "Celebratory phrase for being out at an event or party.",
+    "cringe_level": 6
+  },
+  {
+    "id": 48,
+    "word": "Zesty",
+    "question": "Calling someone 'Zesty' usually implies:",
+    "correct": "They are being flamboyant or 'extra'",
+    "wrong": ["They are spicy", "They like lemons", "They are fast"],
+    "parent_tip": "Often used as a playful label for a very energetic personality.",
+    "cringe_level": 8
+  },
+  {
+    "id": 49,
+    "word": "Pookie",
+    "question": "Who is your 'Pookie'?",
+    "correct": "A best friend or partner",
+    "wrong": ["A pet dog", "An enemy", "A celebrity you hate"],
+    "parent_tip": "A super-sweet term of endearment. 'You're my pookie.'",
+    "cringe_level": 7
+  },
+  {
+    "id": 50,
+    "word": "Based",
+    "question": "If an opinion is 'Based,' it is:",
+    "correct": "Confidently true, even if controversial",
+    "wrong": ["Found on the floor", "A lie", "Boring"],
+    "parent_tip": "Used to respect someone for saying what they really think.",
+    "cringe_level": 5
+  }
+]

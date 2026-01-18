@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Share, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,12 +10,13 @@ import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 
 import { SkullMascot, Button, ShareCard } from '../components';
 import { SkullExpression } from '../components/SkullMascot';
-import { getTier, getPercentage, saveScore, generateDeviceId } from '../lib/scoring';
+import { getTier, getPercentage, saveScore, generateDeviceId, generateSlangMessage } from '../lib/scoring';
 
 export default function ResultsScreen() {
   const params = useLocalSearchParams<{ score: string; total: string }>();
   const viewShotRef = useRef<ViewShot>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isTexting, setIsTexting] = useState(false);
 
   const score = parseInt(params.score || '0', 10);
   const total = parseInt(params.total || '10', 10);
@@ -58,12 +59,30 @@ export default function ResultsScreen() {
     }
   };
 
-  const handlePlayAgain = () => {
-    router.replace('/quiz');
+  const handleTextMyKid = async () => {
+    try {
+      setIsTexting(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+      const slangMessage = generateSlangMessage(score, total);
+
+      const result = await Share.share({
+        message: slangMessage,
+      });
+
+      if (result.action === Share.sharedAction) {
+        // Shared successfully
+      }
+    } catch (error) {
+      console.error('Error sharing text:', error);
+      Alert.alert('Error', 'Failed to open share. Please try again.');
+    } finally {
+      setIsTexting(false);
+    }
   };
 
-  const handleGoHome = () => {
-    router.replace('/');
+  const handlePlayAgain = () => {
+    router.replace('/quiz');
   };
 
   return (
@@ -76,46 +95,55 @@ export default function ResultsScreen() {
       >
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.content}>
-            {/* Skull with accessory */}
-            <Animated.View entering={FadeInDown.delay(200).duration(500)}>
-              <SkullMascot expression={accessory as SkullExpression} size={120} />
-            </Animated.View>
-
-            {/* Percentage */}
-            <Animated.Text
-              style={styles.percentage}
-              entering={FadeInUp.delay(400).duration(500)}
-            >
-              {percentage}%
-            </Animated.Text>
-
-            {/* Tier Badge */}
+            {/* Results Card */}
             <Animated.View
-              style={styles.tierBadge}
-              entering={FadeInUp.delay(600).duration(500)}
+              style={styles.resultsCard}
+              entering={FadeInDown.delay(200).duration(500)}
             >
-              <Text style={styles.tierText}>{tier}</Text>
-            </Animated.View>
+              {/* Skull with accessory */}
+              <View style={styles.skullContainer}>
+                <SkullMascot expression={accessory as SkullExpression} size={100} />
+              </View>
 
-            {/* Description */}
-            <Animated.Text
-              style={styles.description}
-              entering={FadeInUp.delay(800).duration(500)}
-            >
-              {description}
-            </Animated.Text>
+              {/* Percentage */}
+              <Text style={styles.percentage}>{percentage}%</Text>
+
+              {/* Tier Badge */}
+              <View style={styles.tierBadge}>
+                <Text style={styles.tierText}>{tier}</Text>
+              </View>
+
+              {/* Description */}
+              <Text style={styles.description}>{description}</Text>
+            </Animated.View>
 
             {/* Buttons */}
             <Animated.View
               style={styles.buttonsContainer}
-              entering={FadeInUp.delay(1000).duration(500)}
+              entering={FadeInUp.delay(600).duration(500)}
             >
+              {/* Text my Kid Button */}
+              <View style={styles.textKidButton}>
+                <Button
+                  title={isTexting ? 'Opening...' : "Text My Kid"}
+                  onPress={handleTextMyKid}
+                  variant="secondary"
+                  style={styles.fullWidthButton}
+                  disabled={isTexting}
+                />
+                <Text style={styles.textKidHint}>
+                  Send a slang-filled message to flex your score
+                </Text>
+              </View>
+
               <Button
-                title={isSaving ? 'Saving...' : 'Share Results'}
+                title={isSaving ? 'Saving...' : 'Share Screenshot'}
                 onPress={handleShare}
                 variant="secondary"
-                style={styles.shareButton}
+                style={styles.fullWidthButton}
+                disabled={isSaving}
               />
+
               <Button
                 title="Play Again"
                 onPress={handlePlayAgain}
@@ -159,42 +187,75 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
+  resultsCard: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    // Neubrutalist shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 6,
+  },
+  skullContainer: {
+    marginBottom: 16,
+  },
   percentage: {
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 80,
-    color: '#FFFFFF',
-    marginTop: 24,
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    fontSize: 72,
+    color: '#0F172A',
   },
   tierBadge: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
-    marginTop: 16,
+    backgroundColor: '#EC4899',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    marginTop: 8,
+    // Neubrutalist shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 3,
   },
   tierText: {
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 24,
+    fontSize: 20,
     color: '#FFFFFF',
   },
   description: {
     fontFamily: 'PlusJakartaSans_500Medium',
     fontSize: 16,
-    color: 'rgba(255,255,255,0.9)',
+    color: '#6B7280',
     textAlign: 'center',
     marginTop: 16,
-    paddingHorizontal: 20,
   },
   buttonsContainer: {
-    marginTop: 48,
+    marginTop: 32,
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
+    width: '100%',
   },
-  shareButton: {
-    minWidth: 200,
+  textKidButton: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  textKidHint: {
+    fontFamily: 'PlusJakartaSans_500Medium',
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  fullWidthButton: {
+    width: '100%',
   },
   hiddenShareCard: {
     position: 'absolute',

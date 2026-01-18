@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -15,11 +15,23 @@ import {
   ProgressBar,
   AnswerButton,
   Confetti,
+  DefinitionCard,
 } from '../components';
-import { Question } from '../lib/supabase';
-import { getRandomQuestions, shuffleAnswers, fallbackQuestions } from '../lib/questions';
+import { Question, getRandomQuestions, shuffleAnswers } from '../lib/questions';
 
-const { width } = Dimensions.get('window');
+// Conditionally import ads for native only
+let loadInterstitialAd: () => void = () => {};
+let showInterstitialAd: () => Promise<boolean> = async () => false;
+
+if (Platform.OS !== 'web') {
+  try {
+    const ads = require('../lib/ads');
+    loadInterstitialAd = ads.loadInterstitialAd;
+    showInterstitialAd = ads.showInterstitialAd;
+  } catch (e) {
+    console.log('Ads not available');
+  }
+}
 
 type AnswerState = 'default' | 'correct' | 'wrong' | 'revealed';
 
@@ -31,34 +43,34 @@ interface AnswerOption {
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState<AnswerOption[]>([]);
   const [answered, setAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showDefinition, setShowDefinition] = useState(false);
 
-  // Load questions on mount
+  // Use ref to track score to avoid stale closure issues
+  const scoreRef = useRef(0);
+  const [displayScore, setDisplayScore] = useState(0);
+
+  // Load questions and interstitial ad on mount
   useEffect(() => {
     loadQuestions();
+    // Preload interstitial ad for showing after quiz
+    loadInterstitialAd();
   }, []);
 
-  const loadQuestions = async () => {
+  const loadQuestions = () => {
     setLoading(true);
     try {
-      const fetchedQuestions = await getRandomQuestions(10);
+      const fetchedQuestions = getRandomQuestions(10);
+      setQuestions(fetchedQuestions);
       if (fetchedQuestions.length > 0) {
-        setQuestions(fetchedQuestions);
         setupQuestion(fetchedQuestions[0]);
-      } else {
-        // Use fallback questions
-        setQuestions(fallbackQuestions);
-        setupQuestion(fallbackQuestions[0]);
       }
     } catch (error) {
       console.error('Error loading questions:', error);
-      setQuestions(fallbackQuestions);
-      setupQuestion(fallbackQuestions[0]);
     }
     setLoading(false);
   };
@@ -69,6 +81,7 @@ export default function QuizScreen() {
     setAnswered(false);
     setIsCorrect(false);
     setShowConfetti(false);
+    setShowDefinition(false);
   };
 
   const handleAnswer = useCallback(
@@ -77,7 +90,7 @@ export default function QuizScreen() {
 
       const currentQuestion = questions[currentIndex];
       const selectedAnswer = answers[selectedIndex].text;
-      const correct = selectedAnswer === currentQuestion.correct_answer;
+      const correct = selectedAnswer === currentQuestion.correct;
 
       setIsCorrect(correct);
       setAnswered(true);
@@ -85,7 +98,7 @@ export default function QuizScreen() {
       // Update answer states
       setAnswers((prev) =>
         prev.map((answer, i) => {
-          if (answer.text === currentQuestion.correct_answer) {
+          if (answer.text === currentQuestion.correct) {
             return { ...answer, state: correct ? 'correct' : 'revealed' };
           }
           if (i === selectedIndex && !correct) {
@@ -96,32 +109,46 @@ export default function QuizScreen() {
       );
 
       if (correct) {
-        setScore((prev) => prev + 1);
+        // Update score using ref to avoid stale closure
+        scoreRef.current += 1;
+        setDisplayScore(scoreRef.current);
         setShowConfetti(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       } else {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
 
-      // Auto-advance after delay
+      // Show definition card after a short delay
       setTimeout(() => {
+        setShowDefinition(true);
+      }, 500);
+
+      // Auto-advance after showing definition
+      setTimeout(async () => {
         if (currentIndex < questions.length - 1) {
           const nextIndex = currentIndex + 1;
           setCurrentIndex(nextIndex);
           setupQuestion(questions[nextIndex]);
         } else {
-          // Quiz complete - navigate to results
+          // Quiz complete - show interstitial ad before results
+          try {
+            await showInterstitialAd();
+          } catch (e) {
+            console.log('Could not show interstitial ad');
+          }
+
+          // Navigate to results using ref for accurate score
           router.replace({
             pathname: '/results',
             params: {
-              score: (correct ? score + 1 : score).toString(),
+              score: scoreRef.current.toString(),
               total: questions.length.toString(),
             },
           });
         }
-      }, 1500);
+      }, 3000);
     },
-    [answered, answers, currentIndex, questions, score]
+    [answered, answers, currentIndex, questions]
   );
 
   if (loading) {
@@ -153,6 +180,9 @@ export default function QuizScreen() {
       {/* Progress Bar */}
       <View style={styles.header}>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
+        <View style={styles.scoreContainer}>
+          <Text style={styles.scoreText}>{displayScore}/{currentIndex + (answered ? 1 : 0)}</Text>
+        </View>
       </View>
 
       {/* Confetti on correct answer */}
@@ -163,10 +193,11 @@ export default function QuizScreen() {
         <Animated.View
           style={[
             styles.feedbackOverlay,
-            { backgroundColor: isCorrect ? 'rgba(132, 204, 22, 0.1)' : 'rgba(255, 75, 75, 0.1)' },
+            { backgroundColor: isCorrect ? 'rgba(132, 204, 22, 0.15)' : 'rgba(255, 75, 75, 0.15)' },
           ]}
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
+          pointerEvents="none"
         >
           {!isCorrect && (
             <Text style={styles.cringeText}>CRINGE</Text>
@@ -174,27 +205,48 @@ export default function QuizScreen() {
         </Animated.View>
       )}
 
-      {/* Question Card */}
-      <Animated.View
-        key={currentIndex}
-        style={styles.questionContainer}
-        entering={SlideInRight.duration(300)}
-        exiting={SlideOutLeft.duration(200)}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.question}>{currentQuestion.question_text}</Text>
+        {/* Question Card */}
+        <Animated.View
+          key={currentIndex}
+          style={styles.questionCard}
+          entering={SlideInRight.duration(300)}
+          exiting={SlideOutLeft.duration(200)}
+        >
+          {/* Word Badge */}
+          <View style={styles.wordBadge}>
+            <Text style={styles.wordBadgeText}>{currentQuestion.word}</Text>
+          </View>
 
-        <View style={styles.answersContainer}>
-          {answers.map((answer, index) => (
-            <AnswerButton
-              key={`${currentIndex}-${index}`}
-              text={answer.text}
-              state={answer.state}
-              onPress={() => handleAnswer(index)}
-              disabled={answered}
-            />
-          ))}
-        </View>
-      </Animated.View>
+          <Text style={styles.question}>{currentQuestion.question}</Text>
+
+          <View style={styles.answersContainer}>
+            {answers.map((answer, index) => (
+              <AnswerButton
+                key={`${currentIndex}-${index}`}
+                text={answer.text}
+                state={answer.state}
+                onPress={() => handleAnswer(index)}
+                disabled={answered}
+              />
+            ))}
+          </View>
+        </Animated.View>
+
+        {/* Definition Card - shows after answering */}
+        {showDefinition && (
+          <DefinitionCard
+            word={currentQuestion.word}
+            parentTip={currentQuestion.parent_tip}
+            cringeLevel={currentQuestion.cringe_level}
+            isCorrect={isCorrect}
+          />
+        )}
+      </ScrollView>
 
       {/* Skull mascot in corner */}
       <View style={styles.cornerSkull}>
@@ -214,7 +266,30 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 16,
-    paddingBottom: 24,
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  scoreContainer: {
+    backgroundColor: '#8B5CF6',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    // Neubrutalist shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 3,
+  },
+  scoreText: {
+    fontFamily: 'PlusJakartaSans_700Bold',
+    fontSize: 14,
+    color: '#FFFFFF',
   },
   loadingContainer: {
     flex: 1,
@@ -227,17 +302,55 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 16,
   },
-  questionContainer: {
+  scrollView: {
     flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 20,
+    paddingBottom: 100,
+  },
+  questionCard: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    borderRadius: 16,
+    padding: 20,
+    // Neubrutalist shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  wordBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#EC4899',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    marginBottom: 16,
+    // Neubrutalist shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 2,
+  },
+  wordBadgeText: {
+    fontFamily: 'PlusJakartaSans_700Bold',
+    fontSize: 14,
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   question: {
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 24,
-    color: '#1F2937',
-    textAlign: 'center',
-    marginBottom: 32,
-    lineHeight: 32,
+    fontSize: 22,
+    color: '#0F172A',
+    marginBottom: 24,
+    lineHeight: 30,
   },
   answersContainer: {
     gap: 12,
@@ -247,14 +360,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
-    pointerEvents: 'none',
   },
   cringeText: {
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 48,
+    fontSize: 56,
     color: '#FF4B4B',
-    opacity: 0.8,
+    opacity: 0.9,
     transform: [{ rotate: '-15deg' }],
+    textShadowColor: '#0F172A',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 0,
   },
   cornerSkull: {
     position: 'absolute',

@@ -6,3 +6,5 @@ export { QuizCard } from './QuizCard';
 export { ShareCard } from './ShareCard';
 export { Confetti } from './Confetti';
 export { Button } from './Button';
+export { DefinitionCard } from './DefinitionCard';
+export { AdBanner } from './AdBanner';

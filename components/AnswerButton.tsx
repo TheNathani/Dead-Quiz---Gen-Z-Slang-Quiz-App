@@ -21,6 +21,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function AnswerButton({ text, onPress, disabled = false, state = 'default' }: AnswerButtonProps) {
   const scale = useSharedValue(1);
   const shakeX = useSharedValue(0);
+  const translateY = useSharedValue(0);
 
   const triggerHaptic = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -28,7 +29,8 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
 
   const handlePressIn = () => {
     if (!disabled) {
-      scale.value = withTiming(0.97, { duration: 100 });
+      scale.value = withTiming(0.98, { duration: 100 });
+      translateY.value = withTiming(2, { duration: 100 });
       runOnJS(triggerHaptic)();
     }
   };
@@ -36,6 +38,7 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
   const handlePressOut = () => {
     if (!disabled) {
       scale.value = withTiming(1, { duration: 100 });
+      translateY.value = withTiming(0, { duration: 100 });
     }
   };
 
@@ -44,6 +47,7 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
       transform: [
         { scale: scale.value },
         { translateX: shakeX.value },
+        { translateY: translateY.value },
       ],
     };
   });
@@ -61,6 +65,18 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
     }
   };
 
+  const getBorderColor = () => {
+    switch (state) {
+      case 'correct':
+      case 'revealed':
+        return '#65A30D';
+      case 'wrong':
+        return '#DC2626';
+      default:
+        return '#0F172A';
+    }
+  };
+
   const getTextColor = () => {
     switch (state) {
       case 'correct':
@@ -68,7 +84,7 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
       case 'revealed':
         return '#FFFFFF';
       default:
-        return '#374151';
+        return '#0F172A';
     }
   };
 
@@ -89,8 +105,11 @@ export function AnswerButton({ text, onPress, disabled = false, state = 'default
       style={[
         styles.button,
         animatedStyle,
-        { backgroundColor: getBackgroundColor() },
-        disabled && styles.disabled,
+        {
+          backgroundColor: getBackgroundColor(),
+          borderColor: getBorderColor(),
+        },
+        disabled && state === 'default' && styles.disabled,
       ]}
       onPress={onPress}
       onPressIn={handlePressIn}
@@ -106,12 +125,13 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 16,
-    marginVertical: 6,
+    borderRadius: 12,
+    borderWidth: 2,
+    // Neubrutalist shadow
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
     elevation: 3,
   },
   text: {
@@ -120,6 +140,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabled: {
-    opacity: 0.7,
+    opacity: 0.6,
   },
 });
