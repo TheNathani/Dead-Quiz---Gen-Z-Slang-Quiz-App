@@ -8,7 +8,7 @@ import * as Sharing from 'expo-sharing';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 
-import { SkullMascot, Button, ShareCard } from '../components';
+import { SkullMascot, Button, ShareCard, AdBanner } from '../components';
 import { SkullExpression } from '../components/SkullMascot';
 import { getTier, getPercentage, saveScore, generateDeviceId, generateSlangMessage } from '../lib/scoring';
 
@@ -150,6 +150,14 @@ export default function ResultsScreen() {
                 variant="ghost"
               />
             </Animated.View>
+
+            {/* Banner Ad */}
+            <Animated.View
+              style={styles.adContainer}
+              entering={FadeInUp.delay(800).duration(500)}
+            >
+              <AdBanner />
+            </Animated.View>
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -261,5 +269,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: -1000,
     top: -1000,
+  },
+  adContainer: {
+    marginTop: 24,
+    width: '100%',
   },
 });

@@ -1,14 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
-import { SkullMascot, Button, AdBanner } from '../components';
+import { SkullMascot, Button, AdBanner, MockInterstitialAd } from '../components';
 
 export default function HomeScreen() {
+  const [showInterstitial, setShowInterstitial] = useState(false);
+
   const handleStartQuiz = () => {
     router.push('/quiz');
+  };
+
+  const handlePreviewAds = () => {
+    setShowInterstitial(true);
   };
 
   return (
@@ -54,6 +60,14 @@ export default function HomeScreen() {
               entering={FadeInUp.delay(800).duration(500)}
             >
               <Button title="Start Quiz" onPress={handleStartQuiz} />
+
+              {/* Preview Ads Button */}
+              <TouchableOpacity
+                style={styles.previewAdsButton}
+                onPress={handlePreviewAds}
+              >
+                <Text style={styles.previewAdsText}>Preview Interstitial Ad</Text>
+              </TouchableOpacity>
             </Animated.View>
           </View>
 
@@ -61,6 +75,13 @@ export default function HomeScreen() {
           <AdBanner style={styles.bannerAd} />
         </SafeAreaView>
       </LinearGradient>
+
+      {/* Mock Interstitial Ad Modal */}
+      <MockInterstitialAd
+        visible={showInterstitial}
+        onClose={() => setShowInterstitial(false)}
+        countdownSeconds={5}
+      />
     </View>
   );
 }
@@ -162,5 +183,21 @@ const styles = StyleSheet.create({
   },
   bannerAd: {
     marginBottom: 8,
+  },
+  previewAdsButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    borderWidth: 2,
+    borderColor: '#8B5CF6',
+    borderRadius: 12,
+    borderStyle: 'dashed',
+  },
+  previewAdsText: {
+    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontSize: 14,
+    color: '#8B5CF6',
+    textAlign: 'center',
   },
 });

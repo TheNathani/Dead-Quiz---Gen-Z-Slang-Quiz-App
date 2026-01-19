@@ -8,3 +8,4 @@ export { Confetti } from './Confetti';
 export { Button } from './Button';
 export { DefinitionCard } from './DefinitionCard';
 export { AdBanner } from './AdBanner';
+export { MockInterstitialAd } from './MockInterstitialAd';
